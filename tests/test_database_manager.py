@@ -1,6 +1,6 @@
 import pytest
 
-from src.Student import *
+from src.student import *
 from src.database_manager import DatabaseManager
 
 
@@ -12,7 +12,8 @@ def manager():
 
 
 def test_insert_request(manager):
-    student = Student(id=11, name='NewestStudent', login='NewestLogin', password='NewestPass1', group_id=2)
+    student = Student(id=11, name='NewestStudent', login='NewestLogin',
+                      password='NewestPass1', group_id=2)
     request = manager.generate_insert_request(student)
     result = manager.send_request(request)
     assert result is None
