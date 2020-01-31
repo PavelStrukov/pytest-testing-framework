@@ -1,10 +1,7 @@
-import re
 
 import mysql.connector
-from mysql.connector import DatabaseError, InterfaceError
+from mysql.connector import DatabaseError
 
-
-# TODO: make SQL request generators more complicated
 
 class DatabaseManager:
     """
@@ -90,7 +87,6 @@ class DatabaseManager:
         request = self._INSERT_REQUEST_STRING.format(*student_data)
         return request
 
-    # TODO: pass names of output colons and conditions (in what form?)
     def generate_select_request(self, conditions=None):
 
         """Generates select request from the template with data from parameter

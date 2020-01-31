@@ -1,7 +1,7 @@
 import pytest
 
-from Student import *
-from database_manager import DatabaseManager
+from src.Student import *
+from src.database_manager import DatabaseManager
 
 
 @pytest.fixture

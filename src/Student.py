@@ -1,4 +1,3 @@
-import json
 
 
 def get_list_of_students(list_of_dicts):
