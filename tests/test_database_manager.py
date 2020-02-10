@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import pytest
+import yaml
 
 from src.student import *
 from src.database_manager import DatabaseManager
@@ -6,8 +9,11 @@ from src.database_manager import DatabaseManager
 
 @pytest.fixture
 def manager():
-    manager = DatabaseManager(["root", "password"], "127.0.0.1", "TestBase")
-    yield manager
+    with open(str(Path(__file__).parent.parent) + "/configs/databaseconfig.yml", "r") as yml_file:
+        dbcfg = yaml.load(yml_file, Loader=yaml.FullLoader)['mysql']
+        manager = DatabaseManager([dbcfg['user'], dbcfg['passwd']], dbcfg['host'], dbcfg['db'])
+        yield manager
+
     manager.close_connection()
 
 
