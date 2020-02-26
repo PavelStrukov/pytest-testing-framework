@@ -1,0 +1,11 @@
+mysql:
+  master:
+    host: localhost
+    port: 4406
+    user: repl
+    password: 'repl'
+  slave:
+    host: localhost
+    port: 5506
+    user: repl
+    password: 'repl'
