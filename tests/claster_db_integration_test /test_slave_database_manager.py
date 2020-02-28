@@ -2,6 +2,7 @@ import time
 
 import pytest
 import yaml
+import allure
 from mysql.connector import DatabaseError
 
 from defenitions import ROOT_DIR
@@ -13,8 +14,10 @@ table_name = "students"
 error_message = "The MySQL server is running with the --read-only option so it cannot execute this statement"
 
 
+@allure.title("With allure step create connection to master")
 @pytest.fixture(scope="module")
 def master_manager():
+    """creating master manager"""
     with open(str(ROOT_DIR) + "/configs/database_replication_config.yml", "r") as yml_file:
         db_cfg = yaml.load(yml_file, Loader=yaml.FullLoader)['mysql']
         db_master_cfg = db_cfg['master']
@@ -26,6 +29,7 @@ def master_manager():
         master_manager.close_connection()
 
 
+@allure.title("With allure step create connection to slave")
 @pytest.fixture(scope="module")
 def slave_manager():
     with open(str(ROOT_DIR) + "/configs/database_replication_config.yml", "r") as yml_file:
@@ -38,6 +42,7 @@ def slave_manager():
         slave_manager.close_connection()
 
 
+@allure.title("With allure step create database from master and check, it is visible from slave")
 def test_visibility_of_created_database(master_manager, slave_manager):
     master_manager.send_request("CREATE DATABASE IF NOT EXISTS {}".format(db_name))
     time.sleep(0.05)
@@ -49,6 +54,7 @@ def test_visibility_of_created_database(master_manager, slave_manager):
     assert db_name in response.values()
 
 
+@allure.title("With allure step create table from master and check, it is visible from slave")
 def test_visibility_of_created_table(master_manager, slave_manager):
     master_manager.send_request("CREATE TABLE IF NOT EXISTS {}.{} ("
                                 "id INT,"
@@ -67,11 +73,13 @@ def test_visibility_of_created_table(master_manager, slave_manager):
     assert table_name in response.values()
 
 
+@allure.title("With allure step check it is impossible to create database from slave")
 def test_creation_db_from_slave(slave_manager):
     with pytest.raises(DatabaseError):
         slave_manager.send_request("CREATE DATABASE IF NOT EXISTS {}".format(db_name))
 
 
+@allure.title("With allure step check it is impossible to create table from slave")
 def test_creation_table_from_slave(slave_manager):
     with pytest.raises(DatabaseError):
         slave_manager.send_request("CREATE TABLE IF NOT EXISTS {}.{} ("
@@ -83,11 +91,13 @@ def test_creation_table_from_slave(slave_manager):
                                    "ENGINE=INNODB;".format(db_name, table_name))
 
 
+@allure.title("With allure step check it is impossible to delete table from slave")
 def test_deletion_table_from_slave(slave_manager):
     with pytest.raises(DatabaseError):
         slave_manager.send_request("DROP TABLE {}".format(table_name))
 
 
+@allure.title("With allure step check it is impossible to delete database from slave")
 def test_deletion_db_from_slave(slave_manager):
     with pytest.raises(DatabaseError):
         slave_manager.send_request("DROP DATABASE {}".format(db_name))
@@ -101,6 +111,7 @@ insert_student_data = [
 ]
 
 
+@allure.title("With allure step check it is impossible to insert student {student_data} from slave")
 @pytest.mark.parametrize("student_data, expected", insert_student_data)
 def test_insert_statement(slave_manager, student_data, expected):
     with pytest.raises(expected):
@@ -123,6 +134,7 @@ select_student_data = [
 ]
 
 
+@allure.title("With allure step select students with {conditions} from slave")
 @pytest.mark.parametrize("conditions, expected", select_student_data)
 def test_select_statement(master_manager, slave_manager, conditions, expected):
     insert_student = master_manager.generate_insert_request(Student(student_as_dict=expected))
@@ -153,6 +165,8 @@ update_student_data = [
 ]
 
 
+@allure.title("With allure step check it is impossible to set student with {conditions} "
+              "values {student_data} from slave")
 @pytest.mark.parametrize("conditions, student_data", update_student_data)
 def test_update_statement(master_manager, slave_manager, conditions, student_data):
     insert_student = master_manager.generate_insert_request(Student(student_as_dict=student_data))
@@ -168,6 +182,7 @@ delete_student_data = [
 ]
 
 
+@allure.title("With allure step check it is impossible to delete student with {conditions} from slave")
 @pytest.mark.parametrize("conditions", delete_student_data)
 def test_delete_student(slave_manager, conditions):
     with pytest.raises(DatabaseError):
@@ -175,6 +190,7 @@ def test_delete_student(slave_manager, conditions):
         slave_manager.send_request(delete_student)
 
 
+@allure.title("With allure step check that student inserted from master is visible from slave")
 def test_insert_from_master_is_visible_in_slave_request(master_manager, slave_manager):
     student_data = {"id": 100, "login": 'someLogin100', "password": 'qwerty123', "name": 'SomeName100', "group_id": 20}
     student = Student(student_as_dict=student_data)
@@ -197,6 +213,8 @@ update_master_slave_data = [
 ]
 
 
+@allure.title("With allure step check that assigned values {update_data} from master "
+              "to student with {conditions} is visible from slave")
 @pytest.mark.parametrize("conditions, update_data", update_master_slave_data)
 def test_update_from_master_is_visible_in_slave_request(master_manager, slave_manager, conditions, update_data):
     update_request = master_manager.generate_update_request(update_data, conditions)
@@ -213,6 +231,7 @@ def test_update_from_master_is_visible_in_slave_request(master_manager, slave_ma
     assert str(updated_student[update_data[0]]) == expected
 
 
+@allure.title("With allure step check when master try to update not existed student, nothing happens")
 def test_update_from_master_without_changes_is_visible_in_slave(master_manager, slave_manager):
     update_data = ("id = 500", "login = 'someNewLogin100', password = 'NewPass100', "
                                "name = 'SomeNewName100', group_id = 3")
@@ -228,6 +247,7 @@ def test_update_from_master_without_changes_is_visible_in_slave(master_manager, 
     assert table_before_changes == table_after_changes
 
 
+@allure.title("With allure step check that few students updated from master are visible from slave")
 def test_update_few_students_from_master_is_visible_in_slave(master_manager, slave_manager):
     update_name = "SomeNewName100"
     student_1 = {"id": 20, "login": 'someLogin20', "password": 'qwerty20', "name": 'SomeName20', "group_id": 20}
@@ -258,8 +278,10 @@ delete_master_slave_data = [
 ]
 
 
+@allure.title("With allure step check that student with {conditions} "
+              "deleted from master isn't visible from slave")
 @pytest.mark.parametrize("conditions", delete_master_slave_data)
-def test_delete_from_master_is_visible_in_slave_request(master_manager, slave_manager, conditions):
+def test_delete_from_master_is_visible_in_slave(master_manager, slave_manager, conditions):
     insert_request = master_manager.generate_insert_request(Student(id=100, name='SomeNewName100',
                                                                     login='someNewLogin100', password='qwerty123',
                                                                     group_id=3))
@@ -276,6 +298,7 @@ def test_delete_from_master_is_visible_in_slave_request(master_manager, slave_ma
     assert response == []
 
 
+@allure.title("With allure step check when master try to delete not existed student, nothing happens")
 def test_delete_from_master_without_changes_is_visible_in_slave(master_manager, slave_manager):
     table_before_changes = slave_manager.send_request(slave_manager.generate_select_request())
 
@@ -289,6 +312,7 @@ def test_delete_from_master_without_changes_is_visible_in_slave(master_manager, 
     assert table_before_changes == table_after_changes
 
 
+@allure.title("With allure step check that few students updated from master are visible from slave")
 def test_delete_few_students_from_master_is_visible_in_slave(master_manager, slave_manager):
     all_students_before_changes = slave_manager.send_request(slave_manager.generate_select_request())
 
