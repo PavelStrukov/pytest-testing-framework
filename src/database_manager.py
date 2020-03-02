@@ -1,4 +1,3 @@
-
 import mysql.connector
 
 
@@ -45,7 +44,7 @@ class DatabaseManager:
     _UPDATE_REQUEST_STRING = "UPDATE students SET {} WHERE {}"
     _DELETE_REQUEST_STRING = "DELETE FROM students WHERE {} = {};"
 
-    def __init__(self, user_data, host, port, database_name):
+    def __init__(self, user_data, host, port, database_name=None):
 
         """Allow to create DatabaseManager instance and create connection
 
@@ -61,16 +60,20 @@ class DatabaseManager:
         self._user_login = user_data[0]
         self._user_password = user_data[1]
 
-        connection = mysql.connector.connect(user=self._user_login, password=self._user_password,
-                                             host=host, port=port)
+        self._connection = mysql.connector.connect(user=self._user_login, password=self._user_password,
+                                                   host=host, port=port)
 
-        cursor = connection.cursor(buffered=True, dictionary=True)
-        cursor.execute("CREATE DATABASE IF NOT EXISTS " + str(database_name))
+        if database_name is not None:
+            cursor = self._connection.cursor(buffered=True, dictionary=True)
+            cursor.execute("CREATE DATABASE IF NOT EXISTS " + str(database_name))
 
-        connection = mysql.connector.connect(user=self._user_login, password=self._user_password,
-                                             host=host, port=port, database=database_name)
+            connection = mysql.connector.connect(user=self._user_login, password=self._user_password,
+                                                 host=host, port=port, database=database_name)
 
-        self._connection = connection
+            self._connection = connection
+
+    def set_database(self, database):
+        self._connection.cmd_init_db(database)
 
     def close_connection(self):
         self._connection.cursor().close()
@@ -176,6 +179,6 @@ class DatabaseManager:
         cursor = self._connection.cursor(buffered=True, dictionary=True)
         response = cursor.execute(request)
         self._connection.commit()
-        if "SELECT" in request:
+        if "SELECT" in request or "SHOW" in request:
             response = cursor.fetchall()
         return response
