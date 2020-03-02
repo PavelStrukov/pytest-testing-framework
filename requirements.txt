@@ -1,0 +1,8 @@
+PyYAML==5.3
+appdirs==1.4.3
+dnspython==1.16.0
+filelock==3.0.12
+mysql-connector-python==8.0.19
+pycodestyle==2.5.0
+six==1.14.0
+virtualenv==20.0.0

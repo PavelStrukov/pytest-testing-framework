@@ -1,0 +1,6 @@
+mysql:
+  host: localhost
+  port: 4406 #master's port
+  user: root
+  password: 'root'
+  db: testdb

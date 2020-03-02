@@ -68,14 +68,11 @@ class Student:
                     value = "'" + value + "'"
                 setattr(self, key, value)
         else:
-            try:
-                self.id = id
-                self.name = "'" + name + "'"
-                self.login = "'" + login + "'"
-                self.password = "'" + password + "'"
-                self.group_id = group_id
-            except (TypeError, IndexError):
-                raise ValueError("Incorrect student's data")
+            self.id = id
+            self.name = "'" + name + "'"
+            self.login = "'" + login + "'"
+            self.password = "'" + password + "'"
+            self.group_id = group_id
 
     def __eq__(self, other):
 
@@ -87,10 +84,3 @@ class Student:
                    self.login == other.login and self.password == other.password and \
                    self.group_id == other.group_id
         return False
-
-    # def get_student_as_json_sting(self):
-    #     student_as_json_string = json.dumps(self.__dict__)
-    #     return student_as_json_string
-
-# student = Student(id=1, name="Paul", login="PaulsLogin", password="PaulsPassword", group_id=3)
-# print(student.get_student_as_json_sting())
