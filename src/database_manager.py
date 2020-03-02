@@ -92,7 +92,7 @@ class DatabaseManager:
             str
                 A string with generated SQL query"""
 
-        student_data = list(student.__dict__.values())
+        student_data = [student.id, student.name, student.login, student.password, student.group_id]
         request = self._INSERT_REQUEST_STRING.format(*student_data)
         return request
 
