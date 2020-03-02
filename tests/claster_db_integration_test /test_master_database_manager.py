@@ -1,5 +1,6 @@
 import pytest
 import yaml
+import allure
 from mysql.connector import ProgrammingError
 
 from defenitions import ROOT_DIR
@@ -10,6 +11,7 @@ db_name = "TestDatabase"
 table_name = "students"
 
 
+@allure.title("With allure step create connection to master")
 @pytest.fixture(scope="module")
 def manager():
     with open(str(ROOT_DIR) + "/configs/database_replication_config.yml", "r") as yml_file:
@@ -23,6 +25,7 @@ def manager():
         manager.close_connection()
 
 
+@allure.title("With allure step check, it is possible to create database from master")
 def test_creation_database(manager):
     manager.send_request("CREATE DATABASE IF NOT EXISTS {}".format(db_name))
     response = manager.send_request("SHOW DATABASES LIKE '{}'".format(db_name))[0]
@@ -31,6 +34,7 @@ def test_creation_database(manager):
     assert db_name in response.values()
 
 
+@allure.title("With allure step check, it is possible to create table from master")
 def test_creation_table(manager):
     manager.send_request("CREATE TABLE IF NOT EXISTS {}.{} ("
                          "id INT,"
@@ -45,6 +49,7 @@ def test_creation_table(manager):
     assert table_name in response.values()
 
 
+@allure.title("With allure step insert student from master")
 def test_positive_insert_statement(manager):
     student = Student(id=1, name='SomeName', login='someLogin1',
                       password='qwerty123', group_id=2)
@@ -68,6 +73,8 @@ insert_negative_student_data = [
 ]
 
 
+@allure.title("With allure step check, it is impossible to insert "
+              "incorrect student data {student_data} from master")
 @pytest.mark.parametrize("student_data, expected", insert_negative_student_data)
 def test_negative_insert_statement(manager, student_data, expected):
     with pytest.raises(expected):
@@ -89,6 +96,7 @@ select_positive_student_data = [
 ]
 
 
+@allure.title("With allure step select students from master")
 @pytest.mark.parametrize("conditions, expected", select_positive_student_data)
 def test_positive_select_statement(manager, conditions, expected):
     new_student = Student(id=2, name="NewStudentName", login="NewStudentLogin",
@@ -113,6 +121,7 @@ def test_positive_select_statement(manager, conditions, expected):
     assert expected == response
 
 
+@allure.title("With allure step update student from master")
 def test_update_single_student(manager):
     student = {'id': 1, "login": 'someNewLogin1', "password": 'NewPass1', "name": 'SomeNewName', "group_id": 5}
 
@@ -135,6 +144,7 @@ def test_update_single_student(manager):
     assert updated_student == student
 
 
+@allure.title("With allure step update few students from master")
 def test_update_few_students(manager):
     student_1 = {'id': 3, "login": 'someLogin4', "password": 'Pass4', "name": 'SomeName4', "group_id": 10}
     student_2 = {'id': 4, "login": 'someLogin5', "password": 'Pass5', "name": 'SomeName5', "group_id": 10}
@@ -163,6 +173,7 @@ def test_update_few_students(manager):
     assert students == response
 
 
+@allure.title("With allure step update not existed student from master")
 def test_update_not_existed_student(manager):
     update_data = {"id": 5, "login": 'someNewLogin1', "password": 'NewPass1', "name": 'SomeNewName', "group_id": 5}
 
@@ -188,6 +199,7 @@ delete_data = [
 ]
 
 
+@allure.title("With allure step delete student from master")
 @pytest.mark.parametrize("delete_student", delete_data)
 def test_delete_student(manager, delete_student):
     for student in delete_student:
@@ -210,6 +222,7 @@ def test_delete_student(manager, delete_student):
     assert delete_student not in all_students
 
 
+@allure.title("With allure step delete not existed student from master")
 def test_delete_not_existed_student(manager):
     students_before_changes = manager.send_request(manager.generate_select_request())
 
@@ -224,6 +237,7 @@ def test_delete_not_existed_student(manager):
     assert students_before_changes == students_after_changes
 
 
+@allure.title("With allure step check, it is impossible to execute incorrect insert request from master")
 def test_incorrect_insert_statement(manager):
     with pytest.raises(ProgrammingError):
         data = ['id_', 1, 'login_name', 'name_', 'SomeName',
@@ -243,6 +257,7 @@ incorrect_update_data = [
 ]
 
 
+@allure.title("With allure step check, it is impossible to execute incorrect update request from master")
 @pytest.mark.parametrize("data", incorrect_update_data)
 def test_incorrect_update_statement(manager, data):
     with pytest.raises(ProgrammingError):
@@ -255,6 +270,7 @@ incorrect_select_data = ['id_ = 1', 'login_name = someLogin1', 'password_ = qwer
                          'name_ = SomeName', 'group_id_ = 3']
 
 
+@allure.title("With allure step check, it is impossible to execute incorrect select request from master")
 @pytest.mark.parametrize("data", incorrect_select_data)
 def test_incorrect_select_statement(manager, data):
     with pytest.raises(ProgrammingError):
@@ -267,6 +283,7 @@ incorrect_delete_data = ['id_ = 1', 'login_name = someLogin1',
                          'name_ = SomeName', 'group_id_ = 3']
 
 
+@allure.title("With allure step check, it is impossible to execute incorrect delete request from master")
 @pytest.mark.parametrize("data", incorrect_delete_data)
 def test_incorrect_delete_statement(manager, data):
     with pytest.raises(ProgrammingError):

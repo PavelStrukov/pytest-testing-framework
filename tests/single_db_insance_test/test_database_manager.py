@@ -1,5 +1,6 @@
 import pytest
 import yaml
+import allure
 from mysql.connector import ProgrammingError
 
 from src.student import *
@@ -26,6 +27,7 @@ def manager():
     manager.close_connection()
 
 
+@allure.title("With allure step insert student into database")
 def test_insert_request(manager):
     student = Student(id=11, name='NewestStudent', login='NewestLogin',
                       password='NewestPass1', group_id=2)
@@ -40,6 +42,7 @@ test_add_invalid_student_data = [
 ]
 
 
+@allure.title("With allure step check, it is impossible to execute invalid insert request")
 @pytest.mark.parametrize("new_student, expected", test_add_invalid_student_data)
 def test_invalid_insert_request(manager, new_student, expected):
     with pytest.raises(expected):
@@ -50,6 +53,7 @@ def test_invalid_insert_request(manager, new_student, expected):
         manager.send_request(request)
 
 
+@allure.title("With allure step select one student from database")
 def test_one_row_select_request(manager):
     created_student = Student(id=7, name='TempStudent', login='TempStudentLogin', password='tempStudentPass1',
                               group_id=3)
@@ -62,6 +66,7 @@ def test_one_row_select_request(manager):
     assert created_student == received_student
 
 
+@allure.title("With allure step select few students from database")
 def test_few_rows_select_request(manager):
     created_students = [Student(id=8, name='FirstTempStudent', login='FirstTempStudentLogin',
                                 password='tempStudentPass1', group_id=15),
@@ -79,6 +84,7 @@ def test_few_rows_select_request(manager):
     assert created_students == received_students
 
 
+@allure.title("With allure step select not existed student from database")
 def test_select_not_existed_student(manager):
     not_existing_student = Student(id=13, name='NoStudent', login='NoStudentLogin',
                                    password='NoStudentPass1', group_id=15)
@@ -89,6 +95,7 @@ def test_select_not_existed_student(manager):
     assert len(result) == 0
 
 
+@allure.title("With allure step update student in database")
 def test_update_request(manager):
     created_student = Student(id=10, name='TempStudent', login='TempStudentLogin', password='tempStudentPass1',
                               group_id=3)
@@ -106,12 +113,14 @@ def test_update_request(manager):
     assert created_student == student_found
 
 
+@allure.title("With allure step update not existed student in database")
 def test_not_existed_student_update(manager):
     with pytest.raises(ProgrammingError):
         update_request = manager.generate_update_request("login='UpdatedLogin'", "name=NoStudent")
         manager.send_request(update_request)
 
 
+@allure.title("With allure step delete student from database")
 def test_delete_request(manager):
     created_student = Student(id=12, name='StudentForDelete', login='DeleteStudentLogin', password='deleteStudentPass1',
                               group_id=3)
@@ -127,6 +136,7 @@ def test_delete_request(manager):
     assert created_student not in all_students
 
 
+@allure.title("With allure step delete not existed student from database")
 def test_not_existed_student_delete(manager):
     delete_request = manager.generate_delete_request("name='NoStudent'")
     result = manager.send_request(delete_request)
