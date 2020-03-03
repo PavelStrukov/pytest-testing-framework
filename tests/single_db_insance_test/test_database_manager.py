@@ -7,6 +7,14 @@ from src.student import *
 from src.database_manager import DatabaseManager
 from defenitions import ROOT_DIR
 
+create_table = "CREATE TABLE IF NOT EXISTS students (id INT, name VARCHAR(255),login VARCHAR(255)," \
+               "password VARCHAR(255), group_id INT) ENGINE=INNODB;"
+drop_db = "DROP DATABASE IF EXISTS testdb"
+test_add_invalid_student_data = [
+    ({"id": "NewestStudent", "name": "NewestLogin", "login": "NewestPass1", "password": 2, "group_id": 2}, TypeError),
+    ({"name": "NewestStudent", "login": "NewestLogin", "password": "NewestPass1", "group_id": 2}, KeyError),
+]
+
 
 @pytest.fixture(scope="module")
 def manager():
@@ -14,16 +22,10 @@ def manager():
         dbcfg = yaml.load(yml_file, Loader=yaml.FullLoader)['mysql']
         manager = DatabaseManager([dbcfg['user'], dbcfg['password']], dbcfg['host'], dbcfg['port'], dbcfg['db'])
 
-        manager.send_request("CREATE TABLE IF NOT EXISTS students ("
-                             "id INT,"
-                             "name VARCHAR(255),"
-                             "login VARCHAR(255),"
-                             "password VARCHAR(255),"
-                             "group_id INT) "
-                             "ENGINE=INNODB;")
+        manager.send_request(create_table)
 
         yield manager
-    manager.send_request("DROP DATABASE IF EXISTS testdb")
+    manager.send_request(drop_db)
     manager.close_connection()
 
 
@@ -34,12 +36,6 @@ def test_insert_request(manager):
     request = manager.generate_insert_request(student)
     result = manager.send_request(request)
     assert result is None
-
-
-test_add_invalid_student_data = [
-    ({"id": "NewestStudent", "name": "NewestLogin", "login": "NewestPass1", "password": 2, "group_id": 2}, TypeError),
-    ({"name": "NewestStudent", "login": "NewestLogin", "password": "NewestPass1", "group_id": 2}, KeyError),
-]
 
 
 @allure.title("With allure step check, it is impossible to execute invalid insert request")
