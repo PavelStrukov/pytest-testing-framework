@@ -1,10 +1,10 @@
 import defenitions
-from ui_testing.pages.python_page import DownloadHelper
+from ui_testing.pages.python_page import PythonPage
 import ui_testing.service as service
 
 
 def test_is_latest_version_python(browser):
-    python_page = DownloadHelper(browser)
+    python_page = PythonPage(browser)
     python_page.go_to_site()
     latest_version = python_page.get_latest_python_version()
 
@@ -12,7 +12,7 @@ def test_is_latest_version_python(browser):
 
 
 def test_download_latest_python_version(browser):
-    python_page = DownloadHelper(browser)
+    python_page = PythonPage(browser)
     python_page.click_download_latest()
     python_page.click_download_for_mac_link()
 

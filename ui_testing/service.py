@@ -103,3 +103,21 @@ def get_expected_python_version():
     with open(path_to_configs, "r") as yml_file:
         version = yaml.load(yml_file, Loader=yaml.FullLoader)['python_version']
         return version
+
+
+def get_required_search_text():
+    """Method provides parsing config yaml data that contains text for searching"""
+    path_to_configs = str(defenitions.ROOT_DIR) + "/ui_testing/configs/python_config.yaml"
+
+    with open(path_to_configs, "r") as yml_file:
+        text = yaml.load(yml_file, Loader=yaml.FullLoader)['search_text']
+        return text
+
+
+def get_expected_post_history():
+    """Method provides parsing config yaml data that contains expected post history"""
+    path_to_configs = str(defenitions.ROOT_DIR) + "/ui_testing/configs/python_config.yaml"
+
+    with open(path_to_configs, "r") as yml_file:
+        history = yaml.load(yml_file, Loader=yaml.FullLoader)['expected_post_history']
+        return history
