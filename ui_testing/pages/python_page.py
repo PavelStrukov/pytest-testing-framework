@@ -2,7 +2,7 @@ from ui_testing.pages.base_page import BasePage
 from ui_testing.locators.python_locators import PythonLocators
 
 
-class PythonPage(BasePage):
+class PythonMainPage(BasePage):
     """Class provides special methods for python.org pages"""
 
     def get_latest_python_version(self):

@@ -1,9 +1,9 @@
-from ui_testing.pages.python_page import PythonPage
+from ui_testing.pages.python_page import PythonMainPage
 import ui_testing.service as service
 
 
 def test_check_python_metaclasses_history(browser):
-    python_page = PythonPage(browser)
+    python_page = PythonMainPage(browser)
     python_page.go_to_site()
     python_page.click_docs_link()
 
