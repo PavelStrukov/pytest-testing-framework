@@ -96,10 +96,25 @@ def get_md5_checksum(file_path):
         return m.hexdigest()
 
 
-def get_expected_python_version():
-    """Method provides parsing config yaml data that contains latest python version"""
+def get_data_from_yaml(required_data):
+    """Method provides extracting definite data from yaml file"""
     path_to_configs = str(defenitions.ROOT_DIR) + "/ui_testing/configs/python_config.yaml"
 
     with open(path_to_configs, "r") as yml_file:
-        version = yaml.load(yml_file, Loader=yaml.FullLoader)['python_version']
-        return version
+        data = yaml.load(yml_file, Loader=yaml.FullLoader)[required_data]
+        return data
+
+
+def get_expected_python_version():
+    """Method provides getting required python version from config file"""
+    return get_data_from_yaml('python_version')
+
+
+def get_required_search_text():
+    """Method provides getting text for searching from config file"""
+    return get_data_from_yaml('search_text')
+
+
+def get_expected_post_history():
+    """Method provides getting required post history from config file"""
+    return get_data_from_yaml('expected_post_history')
