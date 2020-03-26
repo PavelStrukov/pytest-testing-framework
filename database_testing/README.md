@@ -17,9 +17,9 @@ Note: to see generated allure reports you need **allure to be installed** on you
 To install the app:
 
 ```
-$ git clone
+$ git clone https://github.com/PavelStrukov/pytest-testing-framework.git
 
-$ cd WorkingWithDatabase
+$ cd pytest-testing-framework
 
 $ python3 -m virtualenv venv
 $ source venv/bin/activate

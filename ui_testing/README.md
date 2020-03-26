@@ -1,6 +1,6 @@
 # UI testing framework
 
-This is simple ui testing program, that uses Python, PyTest and selenium web driver to manage ui testing 
+This is simple UI testing program, that uses Python, PyTest and selenium web driver to manage UI testing 
 of https://www.python.org/ site.
 
 ### Prerequisites
@@ -15,9 +15,9 @@ See more [here](https://selenium-python.readthedocs.io/installation.html#drivers
 To install the app:
 
 ```
-$ git clone
+$ git clone https://github.com/PavelStrukov/pytest-testing-framework.git
 
-$ cd WorkingWithDatabase
+$ cd pytest-testing-framework
 
 $ python3 -m virtualenv venv
 $ source venv/bin/activate
