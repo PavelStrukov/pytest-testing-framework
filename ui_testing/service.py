@@ -118,3 +118,11 @@ def get_required_search_text():
 def get_expected_post_history():
     """Method provides getting required post history from config file"""
     return get_data_from_yaml('expected_post_history')
+
+
+def get_expected_title(title_name):
+    path_to_configs = str(defenitions.ROOT_DIR) + "/ui_testing/configs/python_config.yaml"
+
+    with open(path_to_configs, "r") as yml_file:
+        title = yaml.load(yml_file, Loader=yaml.FullLoader)["titles"][title_name]
+        return title
