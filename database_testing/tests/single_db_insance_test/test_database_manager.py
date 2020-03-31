@@ -3,8 +3,8 @@ import yaml
 import allure
 from mysql.connector import ProgrammingError
 
-from src.student import *
-from src.database_manager import DatabaseManager
+from database_testing.src.student import *
+from database_testing.src.database_manager import DatabaseManager
 from defenitions import ROOT_DIR
 
 create_table = "CREATE TABLE IF NOT EXISTS students (id INT, name VARCHAR(255),login VARCHAR(255)," \
@@ -18,7 +18,7 @@ test_add_invalid_student_data = [
 
 @pytest.fixture(scope="module")
 def manager():
-    with open(str(ROOT_DIR) + "/configs/databaseconfig.yml", "r") as yml_file:
+    with open(str(ROOT_DIR) + "/database_testing/configs/databaseconfig.yml", "r") as yml_file:
         dbcfg = yaml.load(yml_file, Loader=yaml.FullLoader)['mysql']
         manager = DatabaseManager([dbcfg['user'], dbcfg['password']], dbcfg['host'], dbcfg['port'], dbcfg['db'])
 

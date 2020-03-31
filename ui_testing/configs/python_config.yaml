@@ -1,1 +1,9 @@
 python_version: "Python 3.8.2"
+search_text: "Metaclasses in Python 3000"
+expected_post_history: "11-March-2007, 14-March-2007"
+
+titles:
+  main_page_title: "Welcome to Python.org"
+  download_latest_page_title: "Python Release {} | Python.org"
+  documentation_page_title: "Our Documentation | Python.org"
+  doc_for_metaclasses_page_title: "PEP 3115 -- Metaclasses in Python 3000 | Python.org"

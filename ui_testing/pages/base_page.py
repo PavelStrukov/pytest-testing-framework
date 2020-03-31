@@ -15,6 +15,10 @@ class BasePage:
         return WebDriverWait(self.driver, time).until(EC.presence_of_element_located(locator),
                                                       message=f"Can't find element by locator {locator}")
 
+    def get_page_title(self):
+        """Method returns string with current page name"""
+        return self.driver.title
+
     def go_to_site(self):
         """Method provides getting the main page"""
         return self.driver.get(self.base_url)

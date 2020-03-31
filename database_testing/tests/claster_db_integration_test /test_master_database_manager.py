@@ -2,7 +2,7 @@ import pytest
 import allure
 from mysql.connector import ProgrammingError
 
-from src.student import Student
+from database_testing.src.student import Student
 from conftest import get_manager
 
 db_name = "TestDatabase"
