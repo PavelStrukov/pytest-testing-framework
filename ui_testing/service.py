@@ -121,8 +121,19 @@ def get_expected_post_history():
 
 
 def get_expected_title(title_name):
-    path_to_configs = str(defenitions.ROOT_DIR) + "/ui_testing/configs/python_config.yaml"
+    """Method provides getting required page title from config file"""
+    data = get_data_from_yaml("titles")
+    return data[title_name]
 
-    with open(path_to_configs, "r") as yml_file:
-        title = yaml.load(yml_file, Loader=yaml.FullLoader)["titles"][title_name]
-        return title
+
+def get_slide_title_and_first_string(text):
+    """Method provides extracting from text string first two lines"""
+    all_strings = text.split("\n")
+    return all_strings[0], all_strings[1]
+
+
+def get_expected_slides_data(index):
+    """Method provides getting required slide's title and first string from config file"""
+    all_data = get_data_from_yaml('slides')
+
+    return all_data[index]

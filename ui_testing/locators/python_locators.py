@@ -22,3 +22,21 @@ class PythonLocators:
     LOCATOR_PYTHON_POST_HISTORY_TITLE = (By.XPATH, "//th[contains(text(),'Post-History:')]")
 
     LOCATOR_PYTHON_POST_HISTORY_FIELD = (By.XPATH, "//th[contains(text(),'Post-History:')]/../td")
+
+    PYTHON_INDEX_TAB = "//ol[@class='flex-control-nav flex-control-paging']//li[{index}]//a"
+
+    PYTHON_SLIDES = "//ul[@class='slides menu']//li[{index}]"
+
+    PYTHON_SLIDES_CONTENT = "//div[@id='dive-into-python']//ul[@class='slides menu']//li[{index}]//code"
+
+    def get_python_index_tab_locator(self, index):
+        """Method provides filling index into locator string and generates locator type element"""
+        return By.XPATH, self.PYTHON_INDEX_TAB.format(index=index)
+
+    def get_python_slides_content_locator(self, index):
+        """Method provides filling index into locator string and generates locator type element"""
+        return By.XPATH, self.PYTHON_SLIDES_CONTENT.format(index=index)
+
+    def get_python_slides_locator(self, index):
+        """Method provides filling index into locator string and generates locator type element"""
+        return By.XPATH, self.PYTHON_SLIDES.format(index=index)

@@ -7,3 +7,20 @@ titles:
   download_latest_page_title: "Python Release {} | Python.org"
   documentation_page_title: "Our Documentation | Python.org"
   doc_for_metaclasses_page_title: "PEP 3115 -- Metaclasses in Python 3000 | Python.org"
+
+slides:
+  1:
+    title: "# Python 3: Fibonacci series up to n"
+    first_string: ">>> def fib(n):"
+  2:
+    title: "# Python 3: List comprehensions"
+    first_string: ">>> fruits = ['Banana', 'Apple', 'Lime']"
+  3:
+    title: "# Python 3: Simple arithmetic"
+    first_string: ">>> 1 / 2"
+  4:
+    title: "# Python 3: Simple output (with Unicode)"
+    first_string: ">>> print(\"Hello, I'm Python!\")"
+  5:
+    title: "# For loop on a list"
+    first_string: ">>> numbers = [2, 4, 6, 8]"
