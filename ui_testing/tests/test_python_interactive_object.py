@@ -11,6 +11,9 @@ def test_python_code_example_is_visible(browser, index):
     python_page = PythonMainPage(browser)
     python_page.go_to_site()
 
+    page_title = python_page.get_page_title()
+    assert page_title == service.get_expected_title("main_page_title")
+
     python_page.click_at_slide_index(index)
 
     assert python_page.check_visibility_of_slide_content(index)
