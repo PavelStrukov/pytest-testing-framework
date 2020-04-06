@@ -37,3 +37,21 @@ class PythonMainPage(BasePage):
     def get_post_history_content(self):
         """Provides getting post history content at the https://www.python.org/dev/peps/pep-3115/ page"""
         return self.find_element(PythonLocators.LOCATOR_PYTHON_POST_HISTORY_FIELD).text
+
+    def click_at_slide_index(self, index):
+        """Provides finding and clicking button with tab index on a main page"""
+        python_locators = PythonLocators()
+        index_tab_locator = python_locators.get_python_index_tab_locator(index)
+        return self.find_element(index_tab_locator).click()
+
+    def check_visibility_of_slide_content(self, index):
+        """Provides finding and checking visibility of current index tab on a main page"""
+        python_locators = PythonLocators()
+        slide_locator = python_locators.get_python_slides_locator(index)
+        return self.find_element(slide_locator).is_displayed()
+
+    def get_slide_content(self, index):
+        """Provides getting string with current index tab content on a main page"""
+        python_locators = PythonLocators()
+        content_locator = python_locators.get_python_slides_content_locator(index)
+        return self.find_element(content_locator).text
