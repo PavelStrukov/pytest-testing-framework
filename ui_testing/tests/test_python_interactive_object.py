@@ -1,7 +1,7 @@
 import pytest
 
 from ui_testing import service
-from ui_testing.pages.python_page import PythonMainPage
+from ui_testing.pages.python_main_page import PythonMainPage
 
 slide_indexes = [1, 2, 3, 4, 5]
 
