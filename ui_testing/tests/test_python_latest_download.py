@@ -1,5 +1,6 @@
 import defenitions
-from ui_testing.pages.python_page import PythonMainPage
+from ui_testing.pages.download_latest_python_page import LatestPythonDownloadPage
+from ui_testing.pages.python_main_page import PythonMainPage
 import ui_testing.service as service
 
 
@@ -27,12 +28,14 @@ def test_download_latest_python_version(browser):
     assert title == service.get_expected_title("download_latest_page_title") \
         .format(service.get_expected_python_version())
 
-    python_page.click_download_for_mac_link()
+    download_latest_page = LatestPythonDownloadPage(browser)
+
+    download_latest_page.click_download_for_mac_link()
 
     service.download_wait(defenitions.PATH_TO_DOWNLOADS, 1)
 
     actual_check_sum = service.get_md5_checksum(service.get_path_to_downloaded_file())
 
-    expected_check_sum = python_page.get_mac_os_md5_sum()
+    expected_check_sum = download_latest_page.get_mac_os_md5_sum()
 
     assert actual_check_sum == expected_check_sum
